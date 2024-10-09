@@ -60,6 +60,8 @@ def sigv4_request(
     SigV4Auth(credentials, service, region).add_auth(req)
     req = req.prepare()
 
+    print("request")
+
     # send request
     return request(
         method=req.method,
@@ -70,12 +72,14 @@ def sigv4_request(
 
 
 def askQuestion(question, url, endSession=False):
+    print("asking question")
     myobj = {
         "inputText": question,
         "enableTrace": True,
         "endSession": endSession
     }
 
+    print("sigv4_request")
     # send request
     response = sigv4_request(
         url,
@@ -88,16 +92,18 @@ def askQuestion(question, url, endSession=False):
         region=theRegion,
         body=json.dumps(myobj)
     )
+    print("decode_response")
 
     return decode_response(response)
 
 
 def decode_response(response):
     # Create a StringIO object to capture print statements
-    #captured_output = io.StringIO()
-    #sys.stdout = captured_output
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
 
     # Your existing logic
+    print("response, ", response)
     string = ""
     for line in response.iter_content():
         try:
