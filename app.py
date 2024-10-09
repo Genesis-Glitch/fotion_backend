@@ -29,7 +29,34 @@ def get_events():
 
     results = [tuple(row) for row in events]
 
-    return json.dumps(results)
+    datax = []
+    for row in events:
+
+        event_loc = {
+             "id": "82ee981b-e19f-962a-401e-ea34ebfb4848",
+             "title": "event title",
+             "description": "event description",
+             "location": "event location",
+             "quota": 99,
+             "event_date": "2024-12-12",
+             "event_time_start": "08:00",
+             "event_time_end": "15:00",
+             "event_longitude": "123123123",
+             "event_latitude": "234234234",
+             "event_image_url": "https://picsum.photos/100/200",
+        }
+
+        datax.append(event_loc)
+
+    print(datax)
+
+    resp_json = {
+        'rc': '0000',
+        'message': 'success',
+        'data': datax
+    }
+
+    return json.dumps(resp_json)
 
 
 if __name__ == '__main__':
