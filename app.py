@@ -103,7 +103,7 @@ def get_event(id):
 @app.route("/q1")
 def question1():
     event = {
-        "sessionId": "MYSESSION",
+        "sessionId": "MY_FOOD_SESSION",
         "question": "give me the appropriate food donation drive event dates and number of registrants available in json format, dont include any texts, just the json data"
     }
     response = agent_integration.lambda_handler(event, None)
