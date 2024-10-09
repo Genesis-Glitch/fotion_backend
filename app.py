@@ -104,7 +104,7 @@ def get_event(id):
 def question1():
     event = {
         "sessionId": "MYFOODSESSION",
-        "question": "give me the appropriate food donation drive event dates and number of registrants available in json format, dont include any texts, just the json data"
+        "question": "give me the appropriate food donation drive event dates and number of registrants available and location in json format, dont include any texts, just the json data"
     }
     response = agent_integration.lambda_handler(event, None)
     try:
