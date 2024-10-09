@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from flask import Flask, current_app
 from flask import Flask, render_template
 import json
@@ -13,6 +15,46 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+    for i in range(1,10):
+        print(i)
+        db.execute("INSERT INTO event (id, "
+                   "author_id, "
+                   "created, "
+                   "title, "
+                   "body, "
+                   "location_id, "
+                   "event_date, "
+                   "event_time_start, "
+                   "event_time_end, "
+                   "event_longitude, "
+                   "event_latitude, "
+                   "event_image_url) "
+                   "VALUES("
+                   ""+str(i)+", 1, CURRENT_TIMESTAMP, 'AUCKLAND', 'AUCKLAND FREE FOOD', 0, CURRENT_TIMESTAMP, '12:00', '13:00', '123', '321', 'https://picsum.photos/100/200');")
+        db.commit()
+
+    for i in range(11,20):
+        print(i)
+        db.execute("INSERT INTO event (id, "
+                   "author_id, "
+                   "created, "
+                   "title, "
+                   "body, "
+                   "location_id, "
+                   "event_date, "
+                   "event_time_start, "
+                   "event_time_end, "
+                   "event_longitude, "
+                   "event_latitude, "
+                   "event_image_url) "
+                   "VALUES("
+                   ""+str(i)+", 1, CURRENT_TIMESTAMP, 'CANTERBURY', 'CANTERBURY FREE FOOD', 0, CURRENT_TIMESTAMP, '12:00', '13:00', '123', '321', 'https://picsum.photos/100/200');")
+        db.commit()
+
+    db.close()
+
+    return "Finished"
+
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!'
@@ -24,7 +66,7 @@ def get_username(name):
 @app.route('/events', methods = ['GET'])
 def get_events():
     conn = get_db()
-    events = conn.execute('SELECT title, body FROM event').fetchall()
+    events = conn.execute('SELECT id, title, body FROM event').fetchall()
     conn.close()
 
     results = [tuple(row) for row in events]
@@ -33,10 +75,10 @@ def get_events():
     for row in events:
 
         event_loc = {
-             "id": "82ee981b-e19f-962a-401e-ea34ebfb4848",
-             "title": "event title",
-             "description": "event description",
-             "location": "event location",
+             "id": str(row[0]),
+             "title": row[1],
+             "description": row[2],
+             "location": row[1],
              "quota": 99,
              "event_date": "2024-12-12",
              "event_time_start": "08:00",
