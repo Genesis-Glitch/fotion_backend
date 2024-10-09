@@ -52,13 +52,32 @@ def init_db():
                    ""+str(i)+", 1, CURRENT_TIMESTAMP, 'CANTERBURY', 'CANTERBURY FREE FOOD', 0, CURRENT_TIMESTAMP, '12:00', '13:00', '123', '321', 'https://picsum.photos/100/200');")
         db.commit()
 
+    #Location data
+    db.execute("INSERT INTO location (id, name, address, longitude, latitude, max_quota, availability) VALUES(1, 'Auckland', 'Auckland', '123', '321',100, 1);")
+    db.execute("INSERT INTO location (id, name, address, longitude, latitude, max_quota, availability) VALUES(2, 'Canterbury', 'Canterbury', '123', '321',100, 1);")
+    db.execute("INSERT INTO location (id, name, address, longitude, latitude, max_quota, availability) VALUES(3, 'Ponsonby', 'Pnsonby', '123', '321',100, 1);")
+    db.commit()
+
     db.close()
 
     return "Finished"
 
 @app.route('/')
 def hello_world():  # put application's code here
-    return 'Hello World!'
+    return 'Fotion ( Food Donation )'
+
+@app.route('/location')
+def location():
+    conn = get_db()
+    event = conn.execute("SELECT * FROM location").fetchall()
+
+    data = []
+    for row in event:
+        data.append(row['name'])
+
+    conn.close()
+
+    return json.dumps(data)
 
 @app.route('/user/<name>', methods = ['GET'])
 def get_username(name):
@@ -110,18 +129,23 @@ def question1():
 
     return resp;
 
-@app.route("/register-event")
+@app.route("/register-event", methods = ['POST'])
 def register_event():
-
+    conn = get_db()
     body = request.json
     print(body)
 
-    return "";
+
+
+    conn.close()
+
+    return ""
 
 
 @app.route('/events', methods = ['GET'])
 def get_events():
     conn = get_db()
+    region = conn.execute("SELECT distinct location FROM event ORDER BY id ASC").fetchall()
     events = conn.execute('SELECT id, title, body FROM event').fetchall()
     conn.close()
 
@@ -148,11 +172,9 @@ def get_events():
 
     print(datax)
 
-    resp_json = {
-        'rc': '0000',
-        'message': 'success',
-        'data': datax
-    }
+    resp_json = [
+        datax
+    ]
 
     return json.dumps(resp_json)
 
