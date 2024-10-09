@@ -63,6 +63,41 @@ def hello_world():  # put application's code here
 def get_username(name):
     return name
 
+@app.route('/event/<id>', methods = ['GET'])
+def get_event(id):
+    conn = get_db()
+    event = conn.execute("SELECT * FROM event WHERE id = ?", (id,))
+
+    data = ""
+    for row in event:
+        data = {
+            "rc": "0000",
+            "message": "Success",
+            "data": {
+                "id": row[0],
+                "title": row[1],
+                "description": row['body'],
+                "location": "event location",
+                "quota": 99,
+                "event_date": "2024-12-12",
+                "event_time_start": "08:00",
+                "event_time_end": "15:00",
+                "event_longitude": "123123123",
+                "event_latitude": "234234234",
+                "event_image_url": [
+                    "https://picsum.photos/100/200",
+                    "https://picsum.photos/100/200",
+                    "https://picsum.photos/100/200",
+                    "https://picsum.photos/100/200",
+                    "https://picsum.photos/100/200"
+                ]
+            }
+        }
+
+    conn.close()
+
+    return json.dumps(data)
+
 @app.route('/events', methods = ['GET'])
 def get_events():
     conn = get_db()
