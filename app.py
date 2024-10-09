@@ -123,13 +123,28 @@ def question1():
         all_data = format_response(response_data['response'])
         the_response = response_data['trace_data']
     except:
-        all_data = "..." 
-        the_response = "Apologies, but an error occurred. Please rerun the application" 
+        all_data = "..."
+        the_response = "Apologies, but an error occurred. Please rerun the application"
 
     # Use trace_data and formatted_response as needed
     print(f"Response Data : ", the_response)
+    print(f"All Response Data : ", all_data)
 
     return the_response;
+
+# Function to parse and format response
+def format_response(response_body):
+    try:
+        # Try to load the response as JSON
+        data = json.loads(response_body)
+        # If it's a list, convert it to a DataFrame for better visualization
+        if isinstance(data, list):
+            return pd.DataFrame(data)
+        else:
+            return response_body
+    except json.JSONDecodeError:
+        # If response is not JSON, return as is
+        return response_body
 
 @app.route("/register-event")
 def register_event():
