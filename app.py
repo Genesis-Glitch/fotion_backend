@@ -109,7 +109,6 @@ def question1():
     response = agent_integration.lambda_handler(event, None)
     try:
         # Parse the JSON string
-        print(response)
         if response and 'body' in response and response['body']:
             response_data = json.loads(response['body'])
             print("TRACE & RESPONSE DATA ->  ", response_data)
@@ -124,12 +123,8 @@ def question1():
         all_data = format_response(response_data['response'])
         the_response = response_data['trace_data']
     except:
-        all_data = "..."
-        the_response = "Apologies, but an error occurred. Please rerun the application"
-
-    # Use trace_data and formatted_response as needed
-    print(f"Response Data : ", the_response)
-    print(f"All Response Data : ", all_data)
+        all_data = "..." 
+        the_response = "Apologies, but an error occurred. Please rerun the application" 
 
     return the_response;
 

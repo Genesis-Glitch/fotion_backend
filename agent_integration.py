@@ -103,7 +103,7 @@ def decode_response(response):
     # sys.stdout = captured_output
 
     # Your existing logic
-    print("response, ", response)
+    # print("response, ", response)
     string = ""
     for line in response.iter_content():
         try:
