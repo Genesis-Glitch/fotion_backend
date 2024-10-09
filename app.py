@@ -1,7 +1,6 @@
 from flask import Flask, current_app
 from flask import Flask, render_template
-from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
+import json
 
 from db import get_db
 
@@ -25,10 +24,12 @@ def get_username(name):
 @app.route('/events', methods = ['GET'])
 def get_events():
     conn = get_db()
-    events = conn.execute('SELECT * FROM event').fetchall()
+    events = conn.execute('SELECT title, body FROM event').fetchall()
     conn.close()
 
-    return events
+    results = [tuple(row) for row in events]
+
+    return json.dumps(results)
 
 
 if __name__ == '__main__':
