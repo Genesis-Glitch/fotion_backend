@@ -17,7 +17,7 @@ import sys
 # echo $AWS_SESSION_TOKEN
 
 agentId = "6MF9NURJBL"  # INPUT YOUR AGENT ID HERE
-agentAliasId = "6EPTHHYNV3"  # INPUT YOUR ALIAS ID HERE
+agentAliasId = "UOGNSVQ0QU"  # INPUT YOUR ALIAS ID HERE
 theRegion = "us-west-2"
 
 os.environ["AWS_REGION"] = theRegion

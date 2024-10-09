@@ -104,7 +104,7 @@ def get_event(id):
 def question1():
     event = {
         "sessionId": "MYFOODSESSION",
-        "question": "give me the appropriate food donation drive event dates and number of registrants available in json format"
+        "question": "give me the appropriate food donation drive event dates and number of registrants available in json format, dont include any texts, just the json data"
     }
     response = agent_integration.lambda_handler(event, None)
     try:
@@ -120,10 +120,8 @@ def question1():
     
     try:
         # Extract the response and trace data
-        all_data = format_response(response_data['response'])
         the_response = response_data['trace_data']
     except:
-        all_data = "..." 
         the_response = "Apologies, but an error occurred. Please rerun the application" 
 
     return the_response;
