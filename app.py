@@ -3,6 +3,7 @@ from uuid import uuid4
 from flask import Flask, current_app, request
 from flask import Flask, render_template
 import json
+import agent_integration
 
 from db import get_db
 
@@ -98,6 +99,12 @@ def get_event(id):
 
     return json.dumps(data)
 
+
+@app.route("/q1")
+def question1():
+    resp = agent_integration.askQuestion("Who the president of US ?","")
+
+    return resp;
 
 @app.route("/register-event")
 def register_event():
