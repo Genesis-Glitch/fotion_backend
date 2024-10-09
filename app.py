@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from flask import Flask, current_app
+from flask import Flask, current_app, request
 from flask import Flask, render_template
 import json
 
@@ -97,6 +97,16 @@ def get_event(id):
     conn.close()
 
     return json.dumps(data)
+
+
+@app.route("/register-event")
+def register_event():
+
+    body = request.json
+    print(body)
+
+    return "";
+
 
 @app.route('/events', methods = ['GET'])
 def get_events():
