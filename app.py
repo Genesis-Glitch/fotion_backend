@@ -102,7 +102,11 @@ def get_event(id):
 
 @app.route("/q1")
 def question1():
-    resp = agent_integration.askQuestion("Who the president of US ?","")
+    event = {
+        "sessionId": "MYSESSION",
+        "question": prompt
+    }
+    resp = agent_integration.lambda_handler(event, None)
 
     return resp;
 
