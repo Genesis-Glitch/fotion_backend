@@ -106,9 +106,30 @@ def question1():
         "sessionId": "MYSESSION",
         "question": "give me the appropriate food donation drive event dates and number of registrants available in json format, dont include any texts, just the json data"
     }
-    resp = agent_integration.lambda_handler(event, None)
+    response = agent_integration.lambda_handler(event, None)
+    try:
+        # Parse the JSON string
+        if response and 'body' in response and response['body']:
+            response_data = json.loads(response['body'])
+            print("TRACE & RESPONSE DATA ->  ", response_data)
+        else:
+            print("Invalid or empty response received")
+    except json.JSONDecodeError as e:
+        print("JSON decoding error:", e)
+        response_data = None 
+    
+    try:
+        # Extract the response and trace data
+        all_data = format_response(response_data['response'])
+        the_response = response_data['trace_data']
+    except:
+        all_data = "..." 
+        the_response = "Apologies, but an error occurred. Please rerun the application" 
 
-    return resp;
+    # Use trace_data and formatted_response as needed
+    print(f"Response Data : ", the_response)
+
+    return the_response;
 
 @app.route("/register-event")
 def register_event():
