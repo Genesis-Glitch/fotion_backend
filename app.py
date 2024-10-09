@@ -153,7 +153,7 @@ def question1():
 @app.route("/register-event", methods = ['POST'])
 def register_event():
     conn = get_db()
-    body = request.json
+    body = request.get_json()
     print(body)
 
 
@@ -166,37 +166,35 @@ def register_event():
 @app.route('/events', methods = ['GET'])
 def get_events():
     conn = get_db()
-    region = conn.execute("SELECT distinct location FROM event ORDER BY id ASC").fetchall()
-    events = conn.execute('SELECT id, title, body FROM event').fetchall()
-    conn.close()
-
-    results = [tuple(row) for row in events]
+    region = conn.execute("SELECT distinct name,id FROM location ORDER BY id ASC").fetchall()
 
     datax = []
-    for row in events:
 
-        event_loc = {
-             "id": str(row[0]),
-             "title": row[1],
-             "description": row[2],
-             "location": row[1],
-             "quota": 99,
-             "event_date": "2024-12-12",
-             "event_time_start": "08:00",
-             "event_time_end": "15:00",
-             "event_longitude": "123123123",
-             "event_latitude": "234234234",
-             "event_image_url": "https://picsum.photos/100/200",
+    for r in region:
+        events = conn.execute('SELECT id, title, event_image_url FROM event WHERE location_id = '+str(r['id'])).fetchall()
+        print('SELECT id, title, event_image_url FROM event WHERE location_id = '+str(r['id']))
+        results = [tuple(row) for row in events]
+
+        event_data = []
+        for row in events:
+            event_loc = {"id":str(row[0]),"title":row[1],"url": row[2]}
+
+            event_data.append(event_loc)
+
+        print(event_data)
+
+        region = {
+            'title': r['name'],
+            'images': event_data,
         }
 
-        datax.append(event_loc)
+        datax.append(region)
 
     print(datax)
 
-    resp_json = [
-        datax
-    ]
+    resp_json = datax
 
+    conn.close()
     return json.dumps(resp_json)
 
 
