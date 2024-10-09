@@ -99,8 +99,8 @@ def askQuestion(question, url, endSession=False):
 
 def decode_response(response):
     # Create a StringIO object to capture print statements
-    # captured_output = io.StringIO()
-    # sys.stdout = captured_output
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
 
     # Your existing logic
     # print("response, ", response)
