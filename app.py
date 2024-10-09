@@ -109,6 +109,7 @@ def question1():
     response = agent_integration.lambda_handler(event, None)
     try:
         # Parse the JSON string
+        print(response)
         if response and 'body' in response and response['body']:
             response_data = json.loads(response['body'])
             print("TRACE & RESPONSE DATA ->  ", response_data)
