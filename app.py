@@ -1,7 +1,7 @@
 from uuid import uuid4
 import qrcode
 from flask import Flask, current_app, request
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 import json
 import agent_integration
 import pandas as pd
@@ -251,7 +251,7 @@ def register_event(user_id, event_id):
     conn.commit()
     conn.close()
 
-    return "Registration Successful"
+    return redirect("http://52.11.213.134/static/img_qr.png")
 
 
 @app.route("/qr")
@@ -261,7 +261,7 @@ def get_qr():
     img = qrcode.make(data)
     img.save('img_qr.png')
 
-    return "http://52.11.213.134/static/img_qr.png"
+    return redirect("http://52.11.213.134/static/img_qr.png")
 
 @app.route('/events', methods = ['GET'])
 def get_events():
