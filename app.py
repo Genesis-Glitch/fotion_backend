@@ -4,6 +4,7 @@ from flask import Flask, current_app, request
 from flask import Flask, render_template
 import json
 import agent_integration
+import pandas as pd
 
 from db import get_db
 
@@ -201,8 +202,8 @@ def get_event(id):
 @app.route("/q1")
 def question1():
     event = {
-        "sessionId": "MY_FOOD_SESSION",
-        "question": "give me the appropriate food donation drive event dates and number of registrants available in json format, dont include any texts, just the json data"
+        "sessionId": "MYFOODSESSION",
+        "question": "give me the appropriate food donation drive event dates and number of registrants available and location in json format, dont include any texts, just the json data"
     }
     response = agent_integration.lambda_handler(event, None)
     try:
@@ -218,28 +219,39 @@ def question1():
     
     try:
         # Extract the response and trace data
-        all_data = format_response(response_data['response'])
         the_response = response_data['trace_data']
     except:
-        all_data = "..." 
         the_response = "Apologies, but an error occurred. Please rerun the application" 
+
 
     # Use trace_data and formatted_response as needed
     print(f"Response Data : ", the_response)
 
     return the_response
 
-@app.route("/register-event", methods = ['POST'])
-def register_event():
+# Function to parse and format response
+def format_response(response_body):
+    try:
+        # Try to load the response as JSON
+        data = json.loads(response_body)
+        # If it's a list, convert it to a DataFrame for better visualization
+        if isinstance(data, list):
+            return pd.DataFrame(data)
+        else:
+            return response_body
+    except json.JSONDecodeError:
+        # If response is not JSON, return as is
+        return response_body
+
+@app.route("/register-event/<user_id>/<event_id>", methods = ['POST', 'GET'])
+def register_event(user_id, event_id):
     conn = get_db()
-    body = request.get_json()
-    print(body)
 
-
-
+    conn.execute("INSERT INTO registration (user_id, event_id, status, registration_date) VALUES("+str(user_id)+","+str(event_id)+", '0', CURRENT_TIMESTAMP);")
+    conn.commit()
     conn.close()
 
-    return ""
+    return "Registration Successful"
 
 
 @app.route("/qr")
