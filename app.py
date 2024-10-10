@@ -1,5 +1,5 @@
 from uuid import uuid4
-
+import qrcode
 from flask import Flask, current_app, request
 from flask import Flask, render_template
 import json
@@ -7,7 +7,9 @@ import agent_integration
 
 from db import get_db
 
+from flask_cors import CORS
 app = Flask(__name__)
+cors = CORS(app)
 
 @app.route('/initdb')
 def init_db():
@@ -63,8 +65,85 @@ def init_db():
     return "Finished"
 
 @app.route('/')
-def hello_world():  # put application's code here
-    return 'Fotion ( Food Donation )'
+def homepage():  # put application's code here
+    return """
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotion - Fighting Hunger, One Meal at a Time</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ff6f61;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        section {
+            padding: 2em;
+            text-align: center;
+        }
+        .cta {
+            background-color: #ff6f61;
+            color: white;
+            padding: 1em;
+            margin: 2em 0;
+            display: inline-block;
+            text-decoration: none;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Fotion</h1>
+        <p>Fighting Hunger, One Meal at a Time</p>
+    </header>
+    <section>
+        <h2>How It Works</h2>
+        <p>1. <strong>Collect</strong>: We gather surplus food from restaurants, grocery stores, and events.</p>
+        <p>2. <strong>Distribute</strong>: Our volunteers deliver the food to local shelters and food banks.</p>
+        <p>3. <strong>Support</strong>: We provide resources and support to ensure the food reaches those who need it most.</p>
+    </section>
+    <section>
+        <h2>Get Involved</h2>
+        <p><a href="#" class="cta">Donate Food</a></p>
+        <p><a href="#" class="cta">Volunteer</a></p>
+        <p><a href="#" class="cta">Spread the Word</a></p>
+    </section>
+    <section>
+        <h2>Our Impact</h2>
+        <p><strong>10,000+ Meals Delivered</strong>: Thanks to our generous donors and hardworking volunteers.</p>
+        <p><strong>50+ Partner Organizations</strong>: Collaborating with local shelters, food banks, and community centers.</p>
+        <p><strong>Countless Smiles</strong>: Bringing hope and nourishment to those in need.</p>
+    </section>
+    <section>
+        <h2>Testimonials</h2>
+        <blockquote>"Fotion has been a lifesaver for our shelter. The food donations have made a huge difference in the lives of our residents." - Local Shelter Manager</blockquote>
+        <blockquote>"Volunteering with Fotion has been an incredibly rewarding experience. It's amazing to see the direct impact of our efforts." - Fotion Volunteer</blockquote>
+    </section>
+    <footer>
+        <p>Contact Us: info@fotion.org | (123) 456-7890 | 123 Food Drive, Auckland, New Zealand</p>
+        <p>Follow Us: <a href="#" style="color: white;">Facebook</a> | <a href="#" style="color: white;">Twitter</a> | <a href="#" style="color: white;">Instagram</a></p>
+    </footer>
+</body>
+</html>
+    """
 
 @app.route('/location')
 def location():
@@ -148,7 +227,7 @@ def question1():
     # Use trace_data and formatted_response as needed
     print(f"Response Data : ", the_response)
 
-    return the_response;
+    return the_response
 
 @app.route("/register-event", methods = ['POST'])
 def register_event():
@@ -162,6 +241,15 @@ def register_event():
 
     return ""
 
+
+@app.route("/qr")
+def get_qr():
+
+    data = "http://52.11.213.134"
+    img = qrcode.make(data)
+    img.save('img_qr.png')
+
+    return "http://52.11.213.134/static/img_qr.png"
 
 @app.route('/events', methods = ['GET'])
 def get_events():
